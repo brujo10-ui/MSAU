@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Núcleo del MSAU V3.1: motor V8 de cruce secuencial con filtros de complejidad, resonancia, conexión y estado para enseñanza empática en tiempo real.​",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brujo10-ui/MSAU.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/brujo10-ui/MSAU/issues"
+  },
+  "homepage": "https://github.com/brujo10-ui/MSAU#readme",
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
