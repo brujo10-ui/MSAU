@@ -19,6 +19,12 @@
   },
   "homepage": "https://github.com/brujo10-ui/MSAU#readme",
   "devDependencies": {
-    "typescript": "^5.5.0"
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   }
 }
