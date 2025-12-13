@@ -6,11 +6,13 @@ export class InMemoryEventStore implements EventStore {
   append(event: MSAUEvent): void {
     // Rule 2.1: Events are append-only.
     // Rule 2.2: Events are immutable.
-    Object.freeze(event);
-    if (event.payload && typeof event.payload === 'object') {
-      Object.freeze(event.payload);
+    // Defensive copy to prevent external mutation of the stored event shell.
+    const e = { ...event };
+    Object.freeze(e);
+    if (e.payload && typeof e.payload === 'object') {
+      Object.freeze(e.payload);
     }
-    this.events.push(event);
+    this.events.push(e);
   }
 
   getAll(): MSAUEvent[] {
