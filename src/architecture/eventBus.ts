@@ -1,23 +1,29 @@
 import type { EventBus, EventHandler, MSAUEvent } from './types.js';
 
-export class InMemoryEventBus implements EventBus {
-  private subscribers: Map<string, EventHandler[]> = new Map();
+type Subscription = { id: string; handler: EventHandler };
 
-  subscribe(eventType: string, handler: EventHandler): void {
+export class InMemoryEventBus implements EventBus {
+  private subscribers: Map<string, Subscription[]> = new Map();
+  private seq = 0;
+
+  subscribe(eventType: string, handler: EventHandler): string {
+    const id = `sub_${++this.seq}`;
     const handlers = this.subscribers.get(eventType) || [];
-    handlers.push(handler);
+    handlers.push({ id, handler });
     this.subscribers.set(eventType, handlers);
+    return id;
   }
 
-  unsubscribe(eventType: string, handler: EventHandler): void {
-    const handlers = this.subscribers.get(eventType);
-    if (handlers) {
-      const index = handlers.indexOf(handler);
-      if (index !== -1) {
-        handlers.splice(index, 1);
-      }
-      if (handlers.length === 0) {
-        this.subscribers.delete(eventType);
+  unsubscribe(id: string): void {
+    for (const [type, list] of this.subscribers.entries()) {
+      const next = list.filter((s) => s.id !== id);
+      if (next.length !== list.length) {
+        if (next.length === 0) {
+          this.subscribers.delete(type);
+        } else {
+          this.subscribers.set(type, next);
+        }
+        return;
       }
     }
   }
@@ -31,9 +37,9 @@ export class InMemoryEventBus implements EventBus {
 
     const handlers = this.subscribers.get(event.type);
     if (handlers) {
-      handlers.forEach((handler) => {
+      handlers.forEach((sub) => {
         try {
-          handler(event);
+          sub.handler(event);
         } catch (error) {
           console.error(`[InMemoryEventBus] Error handling event ${event.type}:`, error);
         }

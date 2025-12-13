@@ -10,8 +10,8 @@ export type EventHandler = (event: MSAUEvent) => void;
 
 export interface EventBus {
   publish(event: MSAUEvent): void;
-  subscribe(eventType: string, handler: EventHandler): void;
-  unsubscribe(eventType: string, handler: EventHandler): void;
+  subscribe(eventType: string, handler: EventHandler): string;
+  unsubscribe(id: string): void;
 }
 
 export interface EventStore {
