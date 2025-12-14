@@ -22,7 +22,7 @@ export interface MSAUEvent<T = unknown> extends BaseEvent {
 }
 
 export type CreateEventContext = {
-  sessionId?: string;
+  sessionId?: string | undefined;
   correlationId?: string;
   actor?: EventActor;
 };
@@ -30,17 +30,25 @@ export type CreateEventContext = {
 export type CreateEventParams<T> = {
   type: EventType;
   payload: T;
-  sessionId?: string;
+  sessionId?: string | undefined;
   correlationId?: string;
   actor?: EventActor;
 };
 
 export type EventHandler = (event: MSAUEvent) => void;
 
+// Subscription returns a cleanup function (void)
+export type Subscription = () => void;
+
 export interface EventBus {
   publish(event: MSAUEvent): void;
-  subscribe(eventType: string, handler: EventHandler): string;
-  unsubscribe(id: string): void;
+  // Overload: subscribe to all events
+  subscribe(handler: EventHandler): Subscription;
+  // Overload: subscribe to specific event type
+  subscribe(eventType: string, handler: EventHandler): Subscription;
+  // Unsubscribe is mainly handled by the returned Subscription function,
+  // but we keep this for backward compatibility or explicit usage if needed.
+  unsubscribe(subscription: Subscription): void;
 }
 
 export interface EventStore {
@@ -49,13 +57,15 @@ export interface EventStore {
 }
 
 export interface AudioAdapter {
-  // Placeholder for AudioAdapter methods
+  teach(input: { concept: string; profile?: unknown }): Promise<void> | void;
 }
 
 export interface LLMAdapter {
-  // Placeholder for LLMAdapter methods
+  validate(input: { answer: string }): Promise<void> | void;
 }
 
 export interface StorageAdapter {
   // Placeholder for StorageAdapter methods
+  save(key: string, data: unknown): Promise<void> | void;
+  load(key: string): Promise<unknown> | unknown;
 }

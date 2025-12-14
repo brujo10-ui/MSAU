@@ -12,8 +12,8 @@ export class MSAUOrchestrator {
   private currentSessionId: string | undefined;
 
   constructor(
-    private bus: EventBus,
-    private store: EventStore,
+    public readonly bus: EventBus,
+    public readonly store: EventStore,
     private audioAdapter: AudioAdapter,
     private illmAdapter: LLMAdapter,
     private storageAdapter: StorageAdapter
@@ -51,6 +51,31 @@ export class MSAUOrchestrator {
 
     this.dispatch(event);
     this.currentSessionId = undefined;
+  }
+
+  public async teach(input: { concept: string; profile?: unknown }): Promise<void> {
+    // Possibly dispatch an event before calling adapter
+    const event = createEvent({
+      type: 'teach.requested',
+      payload: input,
+      sessionId: this.currentSessionId,
+      actor: 'user' // or system? assuming user request or system trigger. Let's say user request.
+    });
+    this.dispatch(event);
+
+    await this.audioAdapter.teach(input);
+  }
+
+  public async validate(input: { answer: string }): Promise<void> {
+    const event = createEvent({
+      type: 'validate.requested',
+      payload: input,
+      sessionId: this.currentSessionId,
+      actor: 'user'
+    });
+    this.dispatch(event);
+
+    await this.illmAdapter.validate(input);
   }
 
   public dispatch(event: MSAUEvent): void {
