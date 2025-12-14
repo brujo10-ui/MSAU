@@ -4,6 +4,9 @@
   "description": "Núcleo del MSAU V3.1: motor V8 de cruce secuencial con filtros de complejidad, resonancia, conexión y estado para enseñanza empática en tiempo real.​",
   "main": "index.js",
   "scripts": {
+    "dev": "tsc --watch",
+    "build:core": "tsc src/architecture/instance.ts --module nodenext --target esnext --moduleResolution nodenext --outDir dist",
+    "verify": "npm run build:core && node scripts/verify_core.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

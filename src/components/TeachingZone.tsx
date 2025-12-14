@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RefreshCw, BookOpen, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useMSAU } from '../hooks/useMSAU';
+import { useMSAU } from '../hooks/useMSAU.js';
 
 export function TeachingZone() {
   const { vm, teach, reset } = useMSAU();
